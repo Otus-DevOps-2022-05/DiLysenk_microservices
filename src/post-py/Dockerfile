@@ -1,9 +1,10 @@
 FROM python:3.6.0-alpine
 WORKDIR /app
 ADD . /app
-RUN apk update && apk upgrade
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev
-RUN pip install -r /app/requirements.txt
+RUN apk --no-cache --update add build-base=0.4-r1 \
+  && pip install --upgrade --no-cache-dir pip==21.3.1 \
+  && pip install --upgrade --no-cache-dir -r /app/requirements.txt \
+  && apk del build-base
 ENV POST_DATABASE_HOST post_db
 ENV POST_DATABASE posts
-CMD ["python3", "post_app.py"]
+ENTRYPOINT ["python3", "post_app.py"]
