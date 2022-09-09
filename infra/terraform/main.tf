@@ -1,3 +1,9 @@
+# terraform init
+# terraform validate
+# terraform fmt
+# terraform plan
+# terraform apply
+
 terraform {
   required_providers {
     yandex = {
@@ -14,8 +20,9 @@ provider "yandex" {
   zone                     = var.zone
 }
 
-resource "yandex_compute_instance" "app" {
-  name = "reddit-app"
+resource "yandex_compute_instance" "vm-1" {
+  # имя создаваемой машины
+  name = "docker-vm"
 
   resources {
     cores  = 2
@@ -24,14 +31,15 @@ resource "yandex_compute_instance" "app" {
 
   boot_disk {
     initialize_params {
-      # Указать id образа созданного в предыдущем домашем задании
-      image_id = ""
+      # указывается id образа  Yandex Cloud Marketplace
+      # https://cloud.yandex.ru/marketplace
+      image_id = var.disk_id
     }
   }
 
   network_interface {
-    # Указан id подсети default-ru-central1-a
-    subnet_id = "enplkgfj4bjhhhd827dg"
+    # Указан id подсети default-ru-central1-a (не vps, а подсеть vps)
+    subnet_id = var.subnet_id
     nat       = true
   }
 }
