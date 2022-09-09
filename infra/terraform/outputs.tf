@@ -1,0 +1,14 @@
+output "external_ip_address_app" {
+  value = module.app.external_ip_address_app
+}
+output "external_ip_address_db" {
+  value = module.db.external_ip_address_db
+}
+
+
+output "name_host_name_app" {
+  value = module.app.name_host_name
+}
+output "name_host_name_db" {
+  value = module.db.name_host_name
+}

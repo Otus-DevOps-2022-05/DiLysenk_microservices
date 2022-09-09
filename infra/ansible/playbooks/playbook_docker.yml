@@ -1,0 +1,6 @@
+- name: Clone
+  hosts: vm #  название хоста
+  tasks:
+   - name: Create docker
+     docker:
+       docker pull
