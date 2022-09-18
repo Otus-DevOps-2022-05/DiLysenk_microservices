@@ -7,4 +7,9 @@
 .terraform/
 jdauphant.nginx
 ansible/vault.key
+build_info.txt
+prometheus/
 
+## python specific
+*.pyc
+.env
