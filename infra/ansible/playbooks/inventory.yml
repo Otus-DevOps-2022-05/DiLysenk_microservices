@@ -1,0 +1,5 @@
+vm:
+  hosts:
+    docker-vm:
+      ansible_host:
+        178.154.201.122

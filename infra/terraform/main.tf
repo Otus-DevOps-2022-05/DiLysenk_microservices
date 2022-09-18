@@ -48,4 +48,7 @@ resource "yandex_compute_instance" "vm-1" {
     subnet_id = var.subnet_id
     nat       = true
   }
+    metadata = {
+    ssh-keys = "ubuntu:${file(var.public_key_path)}"
+  }
 }

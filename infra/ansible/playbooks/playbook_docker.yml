@@ -1,0 +1,34 @@
+- name: Install docker
+  hosts: vm #  название хоста для которого будут производиться изменения
+  become: true # флаг для повышения привелегий
+  tasks:
+    - name: Update and upgrade apt packages
+#      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install using apt
+#      become: true
+      apt:
+        pkg:
+          - git
+          - docker
+          - net-tools
+          - docker-compose
+        state: latest
+        update_cache: true
+
+    - name: create dir for gitlab
+      file:
+        path: "/srv/gitlab/{{item}}"
+        state: directory
+      loop:
+        - config
+        - data
+        - logs
+
+    - name: create file
+      copy:
+        src: './docker-compose.yml'
+        dest: "/srv/gitlab/docker-compose.yml"
