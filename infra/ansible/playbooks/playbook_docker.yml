@@ -28,7 +28,20 @@
         - data
         - logs
 
-    - name: create file
-      copy:
-        src: './docker-compose.yml'
-        dest: "/srv/gitlab/docker-compose.yml"
+    - name: gitlab UP
+      community.docker.docker_container:
+        name: gitlab
+        image: 'gitlab/gitlab-ce:latest'
+        ports:
+          - '80:80'
+          - '443:443'
+          - '2222:22'
+        env:
+          GITLAB_OMNIBUS_CONFIG: |
+            external_url 'http://178.154.201.122'
+            GITLAB_ROOT_EMAIL="root@local"
+            GITLAB_ROOT_PASSWORD="gitlab_root_password"
+        volumes:
+        - '/srv/gitlab/config:/etc/gitlab'
+        - '/srv/gitlab/logs:/var/log/gitlab'
+        - '/srv/gitlab/data:/var/opt/gitlab'
