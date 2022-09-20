@@ -43,3 +43,24 @@
         - '/srv/gitlab/config:/etc/gitlab'
         - '/srv/gitlab/logs:/var/log/gitlab'
         - '/srv/gitlab/data:/var/opt/gitlab'
+
+    - name: runner UP
+      community.docker.docker_container:
+        name: gitlab-runner
+        image: 'gitlab/gitlab-ce:latest'
+        restart: always
+        volumes:
+          - '/srv/gitlabrunner/config:/etc/gitlab-runner'
+          - '/var/run/docker.sock:/var/run/docker.sock'
+
+
+#    docker exec -it gitlab-runner gitlab-runner register \
+#    --url http://<your-ip>/ \
+#    --non-interactive \
+#    --locked=false \
+#    --name DockerRunner \
+#    --executor docker \
+#    --docker-image alpine:latest \
+#    --registration-token <your-token> \
+#    --tag-list "linux,xenial,ubuntu,docker" \
+#    --run-untagged
