@@ -5,7 +5,7 @@ stages:
   - review
   - stage
   - production
-  -
+
 variables:
   DATABASE_URL: 'mongodb://mongo/user_posts'
 
@@ -34,6 +34,8 @@ deploy_dev_job:
 staging:
   stage: stage
   when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
   script:
     - echo 'Deploy'
   environment:
