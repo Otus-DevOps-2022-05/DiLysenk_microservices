@@ -45,8 +45,6 @@ services:
       - back_net
       - front_net
 
-
-
 volumes:
   post_db:
   prometheus_data:
