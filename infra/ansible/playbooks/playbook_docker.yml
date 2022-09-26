@@ -1,0 +1,66 @@
+- name: Install docker
+  hosts: vm #  название хоста для которого будут производиться изменения
+  become: true # флаг для повышения привелегий
+  tasks:
+    - name: Update and upgrade apt packages
+#      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install using apt
+#      become: true
+      apt:
+        pkg:
+          - git
+          - docker
+          - net-tools
+          - docker-compose
+        state: latest
+        update_cache: true
+
+    - name: create dir for gitlab
+      file:
+        path: "/srv/gitlab/{{item}}"
+        state: directory
+      loop:
+        - config
+        - data
+        - logs
+
+    - name: gitlab UP
+      community.docker.docker_container:
+        name: gitlab
+        image: 'gitlab/gitlab-ce:latest'
+        ports:
+          - '80:80'
+          - '443:443'
+          - '2222:22'
+        env:
+          GITLAB_OMNIBUS_CONFIG: |
+            external_url 'http://178.154.201.122'
+        volumes:
+        - '/srv/gitlab/config:/etc/gitlab'
+        - '/srv/gitlab/logs:/var/log/gitlab'
+        - '/srv/gitlab/data:/var/opt/gitlab'
+
+    - name: runner UP
+      community.docker.docker_container:
+        name: gitlab-runner
+        image: 'gitlab/gitlab-ce:latest'
+        restart: always
+        volumes:
+          - '/srv/gitlabrunner/config:/etc/gitlab-runner'
+          - '/var/run/docker.sock:/var/run/docker.sock'
+
+
+#    docker exec -it gitlab-runner gitlab-runner register \
+#    --url http://<your-ip>/ \
+#    --non-interactive \
+#    --locked=false \
+#    --name DockerRunner \
+#    --executor docker \
+#    --docker-image alpine:latest \
+#    --registration-token <your-token> \
+#    --tag-list "linux,xenial,ubuntu,docker" \
+#    --run-untagged
