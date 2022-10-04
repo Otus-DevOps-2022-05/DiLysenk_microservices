@@ -27,7 +27,7 @@ provider "yandex" {
 
 resource "yandex_compute_instance" "vm-1" {
   # имя создаваемой машины
-  name = "docker-vm"
+  name = var.name
 
   resources {
     cores  = 2

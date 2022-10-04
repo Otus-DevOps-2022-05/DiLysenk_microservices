@@ -25,3 +25,8 @@ variable "subnet_id" {
   description = "subnet for vm in yandex cloud"
   default     = "enplkgfj4bjhhhd827dg"
 }
+
+variable "name" {
+  description = "name machine"
+  default     = "onetwo"
+}

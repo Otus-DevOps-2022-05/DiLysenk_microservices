@@ -1,8 +1,8 @@
 docker-machine create \
  --driver generic \
- --generic-ip-address=51.250.14.3 \
+ --generic-ip-address=51.250.13.113 \
  --generic-ssh-user ubuntu \
  --generic-ssh-key ~/.ssh/id_ed25519 \
- docker-host
+ logging
 
-eval $(docker-machine env docker-host)
+eval $(docker-machine env logging)
