@@ -15,7 +15,7 @@ variable "zone" {
 
 variable "public_key_path" {
   # Описание переменной
-  description = "Path to the public key used for ssh access"
+  description = "Path to the public key used for ssh access ~/.ssh/id_ed25519.pub"
 }
 variable "disk_id" {
   description = "Disk image id default ubuntu 16 lts"
@@ -28,10 +28,19 @@ variable "subnet_id" {
 
 variable "name" {
   description = "name machine"
-  default     = "node"
+  default     = "onetwo"
 }
 
 variable "instance_count" {
   description = "instance_count"
   default     = "1"
+}
+
+variable "ssh_user" {
+  description = "name of user"
+  default     = "user"
+}
+
+variable "private_key_path" {
+  description = "private key ~/.ssh/id_ed25519"
 }

@@ -18,15 +18,9 @@ terraform {
   required_version = ">= 0.13"
 }
 
-provider "yandex" {
-  service_account_key_file = var.service_account_key_file
-  cloud_id                 = var.cloud_id
-  folder_id                = var.folder_id
-  zone                     = var.zone
-}
 
-resource "yandex_compute_instance" "node" {
-  name  = "node-${count.index}"
+resource "yandex_compute_instance" "worker" {
+  name  = "node-worker-${count.index}"
   count = var.instance_count
   # имя создаваемой машины
 
@@ -40,16 +34,38 @@ resource "yandex_compute_instance" "node" {
       # указывается id образа  Yandex Cloud Marketplace
       # https://cloud.yandex.ru/marketplace
       image_id = data.yandex_compute_image.ubuntu-20-04.id
-      size = 60
+      size     = 60
     }
   }
 
   network_interface {
     # Указан id подсети default-ru-central1-a (не vps, а подсеть vps)
     subnet_id = var.subnet_id
-    nat       = true
+    #    nat       = true
   }
-    metadata = {
-    ssh-keys = "ubuntu:${file(var.public_key_path)}"
+  metadata = {
+    ssh-keys = "${var.ssh_user}:${file(var.public_key_path)}"
   }
+  #  подключение к машине
+  connection {
+    type        = "ssh"
+    host        = self.network_interface.0.nat_ip_address
+    user        = var.ssh_user
+    agent       = false
+    private_key = file(var.private_key_path)
+  }
+  #    подключение провизионера в удаленнйо машине
+  provisioner "remote-exec" {
+    #        выполнение команды
+    inline = [
+      "sudo apt update",
+      "sudo apt install python3 -y",
+    ]
+
+  }
+
+  provisioner "local-exec" {
+    command = "ansible-playbook -u ${var.ssh_user} -i '${self.network_interface.0.nat_ip_address},' --private-key ${var.private_key_path} ../ansible/playbooks/install-worker.yml --ssh-common-args='-o StrictHostKeyChecking=no'"
+  }
+
 }
