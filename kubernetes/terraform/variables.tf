@@ -28,10 +28,19 @@ variable "subnet_id" {
 
 variable "name" {
   description = "name machine"
-  default     = "node"
+  default     = "onetwo"
 }
 
 variable "instance_count" {
   description = "instance_count"
   default     = "1"
+}
+
+variable "ssh_user" {
+  description = "name of user"
+  default     = "user"
+}
+
+variable "private_key_path" {
+  description = "private key "
 }
