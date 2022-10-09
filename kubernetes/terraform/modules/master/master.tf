@@ -21,7 +21,7 @@ terraform {
 
 resource "yandex_compute_instance" "master" {
   name  = "node-master"
-  count = var.instance_count
+#  count = var.instance_count
   # имя создаваемой машины
 
   resources {
