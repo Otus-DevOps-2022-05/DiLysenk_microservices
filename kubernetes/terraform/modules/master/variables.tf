@@ -20,7 +20,7 @@ variable "instance_count" {
 
 variable "ssh_user" {
   description = "name of user"
-  default     = "user"
+  default     = "ubuntu"
 }
 
 variable "private_key_path" {

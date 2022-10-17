@@ -19,12 +19,12 @@
     - name: copies admin.conf to user's kube config
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: /home/ubuntu/.kube/config
+        dest: /home/user/.kube/config
         remote_src: yes
-        owner: user
+        owner: ubuntu
 
     - name: install Pod network
-      become_user: user
+      become_user: ubuntu
       shell: kubectl apply -f https://docs.projectcalico.org/archive/v3.19/manifests/calico.yaml
       args:
         chdir: $HOME
