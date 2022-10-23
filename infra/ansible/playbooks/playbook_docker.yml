@@ -1,5 +1,5 @@
 - name: Install docker
-  hosts: vm #  название хоста для которого будут производиться изменения
+  hosts:  vm #  название хоста для которого будут производиться изменения
   become: true # флаг для повышения привелегий
   tasks:
     - name: Update and upgrade apt packages

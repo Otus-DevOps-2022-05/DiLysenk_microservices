@@ -4,30 +4,42 @@
   become: yes
   tasks:
     - name: initialize the cluster
-      shell: kubeadm init --pod-network-cidr=10.244.0.0/16
+      shell: kubeadm --apiserver-cert-extra-sans={{ master_host }} --apiserver-advertise-address=0.0.0.0 --control-plane-endpoint={{ master_host }} init --pod-network-cidr=10.244.0.0/16
       args:
         chdir: $HOME
         creates: cluster_initialized.txt
 
+#    - name: Initialize the Kubernetes cluster using kubeadm
+#      command: kubeadm init --apiserver-advertise-address= --apiserver-cert-extra-sans="192.168.50.10
+
+#      "sudo kubeadm init --apiserver-cert-extra-sans=${self.network_interface.0.nat_ip_address}
+#       --apiserver-advertise-address=0.0.0.0 --control-plane-endpoint=${self.network_interface.0.nat_ip_address}
+#       --pod-network-cidr=10.244.0.0/16",
+
     - name: create .kube directory
-      become_user: user
+      become_user: ubuntu
       file:
         path: $HOME/.kube
         state: directory
         mode: 0755
 
+
     - name: copies admin.conf to user's kube config
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: /home/user/.kube/config
+        dest: /home/ubuntu/.kube/config
         remote_src: yes
         owner: ubuntu
 
-    - name: install Pod network
+
+    - name: download calcio.yml
       become_user: ubuntu
-      shell: kubectl apply -f https://docs.projectcalico.org/archive/v3.19/manifests/calico.yaml
-      args:
-        chdir: $HOME
+      get_url:
+        url: https://docs.projectcalico.org/archive/v3.19/manifests/calico.yaml
+        dest: $HOME/
+
+    - name: install Pod network
+      shell: kubectl apply -f /home/ubuntu/calico.yaml
 
     - name: Get the token for joining the worker nodes
       become: yes

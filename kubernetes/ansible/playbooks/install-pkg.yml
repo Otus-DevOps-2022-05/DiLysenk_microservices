@@ -1,0 +1,24 @@
+---
+- name: Install & Start docker
+  hosts: all
+  become: true
+  tasks:
+    - name: Update and upgrade apt packages
+      #      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: install requirements
+      apt:
+        pkg:
+            - apt-transport-https
+            - ca-certificates
+            - curl
+            - gnupg-agent
+            - software-properties-common
+            - git
+            - docker.io
+            - net-tools
+        state: latest
+        update_cache: true
