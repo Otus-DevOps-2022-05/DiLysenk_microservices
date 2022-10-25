@@ -1,2 +1,8 @@
-master_host: 51.250.81.243
-worker_host: 51.250.76.129
+all:
+  hosts:
+    master_host:
+      ansible_host: 0.0.0.0
+
+
+    master_host:
+      ansible_host: 0.0.0.0
