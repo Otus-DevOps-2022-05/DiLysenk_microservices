@@ -1,5 +1,6 @@
-vm:
+all:
   hosts:
-    docker-vm:
-      ansible_host:
-        178.154.201.122
+    master_host:
+      ansible_host: 51.250.3.91
+    worker_host:
+      ansible_host: 51.250.14.226
