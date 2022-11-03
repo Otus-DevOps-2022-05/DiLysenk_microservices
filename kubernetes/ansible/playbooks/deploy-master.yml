@@ -2,16 +2,14 @@
 - name: Deploy k8s master node
   hosts: all
   become: yes
+  vars_files:
+    - hosts_variables.yml
   tasks:
     - name: initialize the cluster
       shell: "kubeadm --apiserver-cert-extra-sans={{ ansible_host }} --apiserver-advertise-address=0.0.0.0 --control-plane-endpoint={{ ansible_host  }} init --pod-network-cidr=10.244.0.0/16"
       args:
         chdir: $HOME
         creates: cluster_initialized.txt
-
-    - name: Print join command
-      debug:
-        msg: "{{ worker_host.ansible_host }}"
 
     - name: create .kube directory
       become_user: ubuntu
@@ -32,15 +30,6 @@
         src: calico.yaml
         dest: /home/ubuntu/
 
-#    - name: download calcio.yml
-#      become_user: ubuntu
-#      get_url:
-#        url: https://raw.githubusercontent.com/projectcalico/calico/v3.24.3/manifests/calico.yaml
-#        dest: $HOME/
-
-    - name: Pause for 1 minutes to build app cache
-      ansible.builtin.pause:
-        minutes: 1
 
     - name: install Pod network
       become_user: ubuntu
@@ -55,12 +44,7 @@
       debug:
         msg: "{{ kubernetes_join_command.stdout }}"
 
-    - name: Copy join command to local file.
-      become: no
-      local_action: copy content="{{ kubernetes_join_command.stdout_lines[0] }}" dest="/tmp/kubernetes_join_command" mode=0777
-
-#    - name: Copy join command to loca.
-#      become: yes
-#      become_user: ubuntu
-#      command: "{{ kubernetes_join_command.stdout }} {{ ansible_host }}"
-#      delegate_to: "{{ hosts.worker_host.ansible_host }}"
+    - name: Deligate to ...
+      become: yes
+      command: "{{ kubernetes_join_command.stdout }}"
+      delegate_to: "{{ worker_host }}"

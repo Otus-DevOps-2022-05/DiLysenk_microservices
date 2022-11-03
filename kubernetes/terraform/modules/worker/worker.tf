@@ -64,10 +64,10 @@ resource "yandex_compute_instance" "worker" {
 
   }
   provisioner "local-exec" {
-    command = "python3 create_inventory.py --set_ip_worker='{\"worker_host\":\"${self.network_interface[0].nat_ip_address}\"}'"
+    command = "python3 create_inventory.py --set_ip_worker='{\"worker_host\":\"${self.network_interface[0].nat_ip_address}\"}'; sleep 3"
   }
 
-  provisioner "local-exec" {
+    provisioner "local-exec" {
     command = "ansible-playbook -u ${var.ssh_user} -i '${self.network_interface.0.nat_ip_address},' --private-key ${var.private_key_path} ../ansible/playbooks/install-worker.yml --ssh-common-args='-o StrictHostKeyChecking=no'"
   }
 
