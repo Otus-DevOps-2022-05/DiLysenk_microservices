@@ -5,6 +5,7 @@
   vars_files:
     - hosts_variables.yml
   tasks:
+
     - name: initialize the cluster
       shell: "kubeadm --apiserver-cert-extra-sans={{ ansible_host }} --apiserver-advertise-address=0.0.0.0 --control-plane-endpoint={{ ansible_host  }} init --pod-network-cidr=10.244.0.0/16"
       args:
@@ -30,6 +31,11 @@
         src: calico.yaml
         dest: /home/ubuntu/
 
+    - name: Copy files with reddit.
+      copy:
+        src: reddit
+        dest: /home/ubuntu/
+        directory_mode: yes
 
     - name: install Pod network
       become_user: ubuntu
